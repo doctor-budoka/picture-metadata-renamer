@@ -2,6 +2,7 @@ from PIL import Image, ExifTags
 from pathlib import Path
 import datetime as dt 
 from shutil import copyfile
+from tqdm import tqdm
 import click
 
 IMG_FILE_TYPES = {".JPG", ".jpg", ".bmp"}
@@ -12,7 +13,8 @@ FILE_NAME_TS_FORMAT = "%Y-%m-%d|%H-%M-%S"
 @click.argument('src_dir', type=Path)
 @click.argument('dest_dir', type=Path)
 def copy_and_reorganise(src_dir, dest_dir):
-    for path in src_dir.iterdir():
+    all_files = list(src_dir.iterdir())
+    for path in tqdm(all_files, total=len(all_files)):
         copy_file_using_timestamp(path, dest_dir)
 
 
@@ -56,7 +58,10 @@ def get_exif_dict(img):
 def copy_to_destination(src_file, new_file):
     dest_dir = new_file.parent
     dest_dir.mkdir(parents=True, exist_ok=True)
-    copyfile(src_file, new_file)
+
+    if new_file.exists():
+        raise FileExistsError()
+    copyfile(src_file, new_file, )
 
 
 if __name__ == "__main__":

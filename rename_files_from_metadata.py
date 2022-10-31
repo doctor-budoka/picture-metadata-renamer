@@ -74,6 +74,7 @@ def get_file_details(src_file):
     elif src_extension in VID_FILE_TYPES:
         return "vid", get_timestamp_from_vid_path(src_file)
     else:
+        print(src_file)
         raise TypeError(f"\"{src_extension}\" is not an accepted file extension")
 
 
